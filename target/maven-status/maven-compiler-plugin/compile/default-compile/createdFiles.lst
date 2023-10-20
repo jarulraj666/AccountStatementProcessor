@@ -1,0 +1,12 @@
+com\rabobank\statement\processor\parser\CsvFileProcessor.class
+com\rabobank\statement\processor\parser\StatementRecordValidator.class
+com\rabobank\statement\processor\parser\StatementProcessor.class
+com\rabobank\statement\processor\model\StatementRecord.class
+com\rabobank\statement\processor\exception\FileTypeNotSupportedException.class
+com\rabobank\statement\processor\parser\AccountStatementProcessorImpl.class
+com\rabobank\statement\processor\parser\StatementProcessHandlerFactory.class
+com\rabobank\statement\processor\parser\AccountStatementProcessor.class
+com\rabobank\statement\processor\util\ReadFileUtil.class
+com\rabobank\statement\processor\model\StatementValidatedRecord.class
+com\rabobank\statement\processor\parser\JsonFileProcessor.class
+com\rabobank\statement\processor\parser\JsonFileProcessor$1.class
