@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.math.BigDecimal;
 
+/**
+ * Account Statement record information to be parsed from files
+ */
 public record StatementRecord(@JsonProperty("Reference") Integer reference,
                               @JsonProperty("Account Number") String accountNumber,
                               @JsonProperty("Description") String description,
