@@ -1,4 +1,4 @@
-package com.rabobank.statement.processor.parser;
+package com.rabobank.statement.processor;
 
 import org.junit.jupiter.api.Test;
 
@@ -17,5 +17,13 @@ public class CsvAccountStatementProcessorTest {
         var result = csvAccountStatementProcessor.validateAccountStatementFile("src/test/resources/records.csv");
         assertNotNull(result);
         assertEquals(4, result.size());
+    }
+
+    @Test
+    public void WhenValidFileWithValidContent_ProcessFileWithValidatedResult() throws IOException {
+        csvAccountStatementProcessor = new CsvAccountStatementProcessor();
+        var result = csvAccountStatementProcessor.validateAccountStatementFile("src/test/resources/records_all_valid.csv");
+        assertNotNull(result);
+        assertEquals(0, result.size());
     }
 }

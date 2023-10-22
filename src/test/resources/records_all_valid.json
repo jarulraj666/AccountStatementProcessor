@@ -1,0 +1,47 @@
+[
+  {
+    "Reference": 177666,
+    "Account Number": "NL93ABNA0585619023",
+    "Description": "Flowers for Rik Theu�",
+    "Start Balance": 44.85,
+    "Mutation": -22.24,
+    "End Balance": 22.61,
+    "Transaction Date": "2015-08-12"
+  },
+  {
+    "Reference": 112806,
+    "Account Number": "NL69ABNA0433647324",
+    "Description": "Subscription for Jan Theu�",
+    "Start Balance": 45.59,
+    "Mutation": 48.18,
+    "End Balance": 93.77,
+    "Transaction Date": "2014-04-15"
+  },
+  {
+    "Reference": 158338,
+    "Account Number": "NL91RABO0315273637",
+    "Description": "Tickets for Vincent King",
+    "Start Balance": 12,
+    "Mutation": 12,
+    "End Balance": 24,
+    "Transaction Date": "2009-10-21"
+  },
+  {
+    "Reference": 193499,
+    "Account Number": "NL93ABNA0585619023",
+    "Description": "Candy for Dani�l Dekker",
+    "Start Balance": 88.44,
+    "Mutation": -13.28,
+    "End Balance": 75.16,
+    "Transaction Date": "2013-08-12"
+  },
+  {
+    "Reference": 112807,
+    "Account Number": "NL90ABNA0585647886",
+    "Description": "Clothes from Peter de Vries",
+    "Start Balance": 32.76,
+    "Mutation": 49.03,
+    "End Balance": 81.79,
+    "Transaction Date": "2012-04-21"
+  }
+]

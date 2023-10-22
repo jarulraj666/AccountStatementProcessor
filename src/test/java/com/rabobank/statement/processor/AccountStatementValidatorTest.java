@@ -1,4 +1,4 @@
-package com.rabobank.statement.processor.parser;
+package com.rabobank.statement.processor;
 
 import com.rabobank.statement.processor.exception.FileTypeNotSupportedException;
 import org.junit.jupiter.api.Assertions;

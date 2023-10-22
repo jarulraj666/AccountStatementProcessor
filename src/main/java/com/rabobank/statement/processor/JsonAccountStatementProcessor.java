@@ -1,4 +1,4 @@
-package com.rabobank.statement.processor.parser;
+package com.rabobank.statement.processor;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
