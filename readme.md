@@ -5,7 +5,7 @@
 
 ```
 <dependency>
-    <groupId>com.rabobank</groupId>
+    <groupId>com.processor</groupId>
     <artifactId>customer-statement-validator</artifactId>
     <version>1.0.0</version>
 </dependency>
