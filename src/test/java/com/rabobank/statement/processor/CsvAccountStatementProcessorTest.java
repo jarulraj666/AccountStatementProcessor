@@ -16,7 +16,7 @@ public class CsvAccountStatementProcessorTest {
         csvAccountStatementProcessor = new CsvAccountStatementProcessor();
         var result = csvAccountStatementProcessor.validateAccountStatementFile("src/test/resources/records.csv");
         assertNotNull(result);
-        assertEquals(4, result.size());
+        assertEquals(5, result.size());
     }
 
     @Test

@@ -16,18 +16,13 @@ class AccountStatementRecordValidator {
     /**
      * Method responsible to validate {@link StatementRecord}
      * @param statementRecord Account Statement Record
-     * @param referenceSets Hold unique Reference Ids to find out duplicates
+     * @param referenceMap Hold unique Reference Ids to find out duplicates
      * @return AccountStatementValidatedRecord
      */
-    public static Optional<AccountStatementValidatedRecord> validatedRecord(StatementRecord statementRecord, HashSet<Integer> referenceSets) {
+    public static Optional<AccountStatementValidatedRecord> validatedRecord(StatementRecord statementRecord, Map<Integer, List<AccountStatementValidatedRecord>> referenceMap) {
         AccountStatementValidatedRecord accountStatementValidatedRecord = null;
         List<String> errors = new ArrayList<>(10);
 
-        // Multiple References
-        if (!referenceSets.add(statementRecord.reference())) {
-            errors.add("Reference number " + statementRecord.reference() + " is duplicated");
-            return Optional.of(new AccountStatementValidatedRecord(statementRecord.reference(), statementRecord.description(), errors.toArray(new String[0])));
-        }
 
         // End Balance Validator
         if (isNotValidBalancePredicate.test(statementRecord)) {
@@ -49,8 +44,25 @@ class AccountStatementRecordValidator {
             errors.add("Transaction Date " + statementRecord.transactionDate() + " is of future Date");
         }
 
+        // Multiple References
+        synchronized (referenceMap) {
+            if(referenceMap.containsKey(statementRecord.reference())) {
+                if(referenceMap.get(statementRecord.reference()).size() == 1) {
+                    referenceMap.get(statementRecord.reference()).get(0).errors().add("Reference number " + statementRecord.reference() + " is duplicated");
+                }
+                errors.add("Reference number " + statementRecord.reference() + " is duplicated");
+                referenceMap.get(statementRecord.reference()).add(
+                        new AccountStatementValidatedRecord(statementRecord.reference(), statementRecord.description(), errors));
+            }
+            else {
+                List<AccountStatementValidatedRecord> referenceList = new ArrayList<>();
+                referenceList.add(new AccountStatementValidatedRecord(statementRecord.reference(), statementRecord.description(), errors));
+                referenceMap.put(statementRecord.reference(), referenceList);
+            }
+        }
+
         if (!errors.isEmpty()) {
-            accountStatementValidatedRecord = new AccountStatementValidatedRecord(statementRecord.reference(), statementRecord.description(), errors.toArray(new String[0]));
+            accountStatementValidatedRecord = new AccountStatementValidatedRecord(statementRecord.reference(), statementRecord.description(), errors);
         }
 
         return Optional.ofNullable(accountStatementValidatedRecord);

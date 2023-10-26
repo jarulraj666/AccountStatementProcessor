@@ -16,7 +16,7 @@ public class JsonAccountStatementProcessorTest {
         jsonAccountStatementProcessor = new JsonAccountStatementProcessor();
         var result = jsonAccountStatementProcessor.validateAccountStatementFile("src/test/resources/records.json");
         assertNotNull(result);
-        assertEquals(32684, result.size());
+        assertEquals(12, result.size());
     }
 
     @Test

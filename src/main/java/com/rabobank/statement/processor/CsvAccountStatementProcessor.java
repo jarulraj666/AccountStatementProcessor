@@ -8,9 +8,7 @@ import org.apache.commons.csv.CSVParser;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,8 +27,10 @@ final class CsvAccountStatementProcessor implements AccountStatementProcessor {
     @Override
     public List<AccountStatementValidatedRecord> validateAccountStatementFile(String filePath) throws IOException {
         ExecutorService executor = Executors.newFixedThreadPool(10);
-        List<CompletableFuture<AccountStatementValidatedRecord>> completableFutures;
-        HashSet<Integer> referenceSets = new HashSet<>();
+        List<CompletableFuture<Void>> completableFutures;
+
+        Map<Integer, List<AccountStatementValidatedRecord>> referenceMap = new HashMap<>();
+
         try (FileReader reader = new FileReader(filePath)) {
 
             CSVParser parser = CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true).build().parse(reader);
@@ -38,13 +38,12 @@ final class CsvAccountStatementProcessor implements AccountStatementProcessor {
             completableFutures = parser.stream().map(record -> {
                 StatementRecord statementRecord = new StatementRecord(Integer.valueOf(record.get(REFERENCE)), record.get(ACCOUNT_NUMBER), record.get(DESCRIPTION), new BigDecimal(record.get(START_BALANCE)), new BigDecimal(record.get(MUTATION)), new BigDecimal(record.get(END_BALANCE)), record.get(TRANSACTION_DATE));
 
-                return CompletableFuture.supplyAsync(() -> {
-                    var statementRecordValidatedOp = AccountStatementRecordValidator.validatedRecord(statementRecord, referenceSets);
-                    return statementRecordValidatedOp.orElse(null);
-                }, executor);
+                return CompletableFuture.runAsync(() -> AccountStatementRecordValidator.validatedRecord(statementRecord, referenceMap), executor);
             }).collect(Collectors.toList());
 
-            return completableFutures.stream().map(CompletableFuture::join).filter(Objects::nonNull).collect(Collectors.toList());
+            completableFutures.forEach(CompletableFuture::join);
+            return referenceMap.values().parallelStream().flatMap(Collection::stream).filter(record -> !record.errors().isEmpty()).collect(Collectors.toList());
+
         } finally {
             executor.shutdown();
         }

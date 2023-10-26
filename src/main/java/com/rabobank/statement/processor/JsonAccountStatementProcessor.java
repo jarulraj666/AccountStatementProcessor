@@ -25,23 +25,22 @@ final class JsonAccountStatementProcessor implements AccountStatementProcessor {
         ObjectMapper objectMapper = new ObjectMapper();
         ExecutorService executor = Executors.newFixedThreadPool(10);
 
-        List<CompletableFuture<AccountStatementValidatedRecord>> completableFutures = new ArrayList<>();
-        HashSet<Integer> referenceSets = new HashSet<>();
+        List<CompletableFuture<Void>> completableFutures = new ArrayList<>();
+        Map<Integer, List<AccountStatementValidatedRecord>> referenceMap = new HashMap<>();
         try (JsonParser jsonParser = jsonFactory.createParser(jsonFile)) {
             if (jsonParser.nextToken() == JsonToken.START_ARRAY) {
                 // Read json in streams to avoid loading entire file into memory
                 while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
                     StatementRecord data = objectMapper.readValue(jsonParser, StatementRecord.class);
                     // Process StatementRecord asynchronously on multiple threads to perform parallel processing
-                    CompletableFuture<AccountStatementValidatedRecord> processingFutures = CompletableFuture.supplyAsync(() -> {
-                        var statementRecordValidatedOp = AccountStatementRecordValidator.validatedRecord(data, referenceSets);
-                        return statementRecordValidatedOp.orElse(null);
-                    }, executor);
-                    completableFutures.add(processingFutures);
+                    completableFutures.add(CompletableFuture.runAsync(() ->
+                            AccountStatementRecordValidator.validatedRecord(data, referenceMap), executor
+                    ));
                 }
             }
 
-            return completableFutures.stream().map(CompletableFuture::join).filter(Objects::nonNull).collect(Collectors.toList());
+            completableFutures.forEach(CompletableFuture::join);
+            return referenceMap.values().parallelStream().flatMap(Collection::stream).filter(record -> !record.errors().isEmpty()).collect(Collectors.toList());
         }
         finally {
             executor.shutdown();

@@ -1,12 +1,15 @@
 package com.rabobank.statement.processor;
 
+import com.rabobank.statement.processor.model.AccountStatementValidatedRecord;
 import com.rabobank.statement.processor.model.StatementRecord;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -86,7 +89,7 @@ public class AccountAccountStatementRecordValidatorTest {
         StatementRecord statementRecord = new StatementRecord(1, "", "", new BigDecimal(-1),
                 new BigDecimal(-2), new BigDecimal(3), "2022-10-10");
 
-        AccountStatementRecordValidator.validatedRecord(statementRecord, new HashSet<>());
+        AccountStatementRecordValidator.validatedRecord(statementRecord, new HashMap<>());
 
     }
 
